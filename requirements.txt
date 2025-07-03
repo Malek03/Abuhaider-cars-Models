@@ -6,9 +6,9 @@ numpy==1.24.4
 Pillow==9.5.0
 
 easyocr==1.6.1
-#inference-sdk==0.5.1
+git+https://github.com/roboflow/inference.git@0.5.1#egg=inference-sdk
 
 tensorflow-cpu==2.11.1
 tensorflow-hub==0.12.0
 
-# faiss-cpu==1.7.4
+faiss-cpu==1.7.4
