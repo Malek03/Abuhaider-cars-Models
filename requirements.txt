@@ -8,7 +8,7 @@ Pillow==9.5.0
 easyocr==1.6.1
 inference-sdk==0.5.1
 
-tensorflow==2.11.1
+tensorflow-cpu==2.11.1
 tensorflow-hub==0.12.0
 
-faiss-cpu==1.7.4
+# faiss-cpu==1.7.4
