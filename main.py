@@ -51,27 +51,3 @@ async def add_image(file: UploadFile = File(...)):
         "message": "Image successfully added.",
         "image_name": file.filename,
     }
-
-@app.post("/recognize_plate")
-async def recognize_plate(file: UploadFile = File(...)):
-    try:
-        # حفظ الصورة مؤقتاً
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
-            tmp.write(await file.read())
-            tmp_path = tmp.name
-        # الخطوات
-        predictions = detect_license_plate(tmp_path)
-        plate_img = extract_plate_from_image(tmp_path, predictions)
-        if plate_img is None:
-            os.remove(tmp_path)
-            return JSONResponse(status_code=404, content={"error": "لم يتم اكتشاف أي لوحة"})
-        enhanced_img = enhance_image_for_ocr(plate_img)
-        numbers = extract_license_number(enhanced_img)
-        os.remove(tmp_path)
-        if numbers:
-            longest = max(numbers, key=len)
-            return {"plate_number": longest}
-        else:
-            return {"plate_number": None}
-    except Exception as e:
-        return JSONResponse(status_code=500, content={"error": str(e)})
