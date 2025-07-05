@@ -40,13 +40,23 @@ async def add_image(file: UploadFile = File(...)):
     emb = get_image_embedding(img_tensor)
     emb_float32 = emb.astype('float32')
     index.add(emb_float32)
+
     save_dir = "images"
     os.makedirs(save_dir, exist_ok=True)
     save_path = os.path.join(save_dir, file.filename)
+
+    # حفظ الصورة
     with open(save_path, "wb") as f:
         f.write(image_bytes)
+
+    # تحديث قائمة الصور
     image_paths.append(file.filename)
-    os.remove(save_path)
+    with open("image_paths.json", "w") as f:
+        json.dump(image_paths, f)
+
+    # حفظ الفهرس
+    faiss.write_index(index, "image_index.faiss")
+
     return {
         "message": "Image successfully added.",
         "image_name": file.filename,
