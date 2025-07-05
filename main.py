@@ -1,6 +1,6 @@
 import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
-from fastapi import FastAPI,UploadFile,FileوHTTPException
+from fastapi import FastAPI,UploadFile,File,HTTPException
 import uuid
 from fastapi.responses import JSONResponse
 from model import preprocess_image_bytes, get_image_embedding, index, image_paths
