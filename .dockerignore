@@ -1,0 +1,7 @@
+_pycache_
+*.pyc
+.git
+.vscode
+venv
+*.md
+Dockerfile

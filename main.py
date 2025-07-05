@@ -2,7 +2,6 @@ import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 from fastapi import FastAPI,UploadFile,File
 from model import preprocess_image_bytes, get_image_embedding, index, image_paths
-from alpr_module import detect_license_plate, extract_plate_from_image, enhance_image_for_ocr, extract_license_number
 import tempfile
 
 
@@ -76,28 +75,3 @@ async def recognize_plate(file: UploadFile = File(...)):
             return {"plate_number": None}
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
-
-
-
-
-
-
-
-# import whisper
-# # حفظ الملف مؤقتاً
-# model = whisper.load_model("small")
-# @app.post("/SoundToText")
-# async def sound_to_text(file: UploadFile = File(...)):
-#     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_audio:
-#         audio_path = temp_audio.name
-#         temp_audio.write(await file.read())
-#     try:
-#         result = model.transcribe(audio_path, language="ar")
-#         transcription = result["text"]
-#     except Exception as e:
-#         transcription = f"Error on Transcription: {str(e)}"
-#     os.remove(audio_path)
-#     return {
-#         "language": "ar",
-#         "transcription": transcription.strip()
-#     }

@@ -1,14 +1,8 @@
-fastapi==0.95.2
-uvicorn==0.22.0
-
-opencv-python==4.7.0.72
-numpy==1.24.4
-Pillow==9.5.0
-
-easyocr==1.6.1
-inference-sdk==0.5.1
-
-tensorflow-cpu==2.11.1
-tensorflow-hub==0.12.0
-
-# faiss-cpu==1.7.4
+tensorflow>=2.10.0
+tensorflow-hub>=0.12.0
+numpy>=1.21.0
+faiss-cpu>=1.7.3
+pillow>=9.2.0
+fastapi>=0.95.0
+uvicorn[standard]>=0.21.0
+python-multipart>=0.0.6
