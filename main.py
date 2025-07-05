@@ -118,7 +118,9 @@ async def add_image(file: UploadFile = File(...)):
             status_code=200,
             content={
                 "message": "تمت إضافة الصورة بنجاح.",
-                "image_name": unique_filename
+                "image_name": unique_filename,
+                "index":index,
+                "image_paths":image_paths
             }
         )
 
