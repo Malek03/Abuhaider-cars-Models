@@ -97,7 +97,7 @@ async def add_image(file: UploadFile = File(...)):
         index.add(emb_float32)
 
         # إنشاء اسم فريد للصورة
-        unique_filename = f"{uuid.uuid4().hex}_{file.filename}"
+        unique_filename = file.filename
 
         # حفظ الصورة في مجلد images/
         save_dir = "images"
