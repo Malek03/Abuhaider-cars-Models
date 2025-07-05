@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from model import preprocess_image_bytes, get_image_embedding, index, image_paths
 import tempfile
 import faiss
+import numpy as np
 
 
 app = FastAPI()
