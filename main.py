@@ -41,10 +41,14 @@ async def search_similar(file: UploadFile = File(...)):
             if idx < 0 or idx >= len(image_paths):
                 continue
 
+            image_name = image_paths[idx]
+            image_url = f"/images/{image_name}"  # أو رابط كامل حسب الخادم
+
             results.append(
                 {
                     "rank": rank,
-                    "image_url": image_paths[idx],
+                    "image_name": image_name,  # الاسم فقط
+                    "image_url": image_url,    # مسار افتراضي على الخادم
                     "distance": float(distances[0][rank - 1]),
                 }
             )
@@ -75,24 +79,16 @@ async def add_image(file: UploadFile = File(...)):
 
         index.add(emb_float32)
 
-        # توليد اسم فريد اعتماداً على اسم الملف المرسل (يمكنك تطويره)
-        unique_filename = file.filename  
+        # فقط نأخذ الاسم ولا نرفع الصورة إلى GCS
+        unique_filename = file.filename  # يمكنك توليد UUID هنا لتجنب التكرار
+        image_paths.append(unique_filename)
 
-        # رفع الصورة إلى GCS (يمكنك نقل دالة الرفع إلى model.py إذا أردت)
-        from model import upload_bytes_to_blob, GCS_BUCKET_NAME, bucket
-
-        public_url = f"https://storage.googleapis.com/{GCS_BUCKET_NAME}/{unique_filename}"
-        upload_bytes_to_blob(unique_filename, image_bytes)
-
-        image_paths.append(public_url)
-
-        # حفظ الفهرس وقائمة الصور (افتراضياً تحفظ محلياً، يمكنك حفظها على GCS باستخدام الدوال في model.py)
         save_faiss_index(index)
         save_image_paths(image_paths)
 
         return JSONResponse(
             status_code=200,
-            content={"message": "تمت إضافة الصورة بنجاح.", "image_url": public_url},
+            content={"message": "تمت إضافة الصورة بنجاح.", "image_name": unique_filename},
         )
 
     except Exception as e:
