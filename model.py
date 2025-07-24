@@ -9,7 +9,7 @@ import faiss
 from google.cloud import storage
 
 # إعداد المتغيرات
-GCS_BUCKET_NAME = "image-search-bucket"
+GCS_BUCKET_NAME = "image-search-bucket-abohider"
 GCS_INDEX_FILE = "car_index.index"
 GCS_PATHS_FILE = "image_paths.npy"
 
