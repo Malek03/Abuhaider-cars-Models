@@ -38,12 +38,10 @@ def upload_bytes_to_blob(blob_name, data):
 
 # ---------- تحميل البيانات ----------
 
-# تحميل الفهرس من GCS
 def load_faiss_index():
     index_bytes = download_blob_as_bytes(GCS_INDEX_FILE)
     return faiss.read_index(io.BytesIO(index_bytes))
 
-# تحميل قائمة المسارات من GCS
 def load_image_paths():
     paths_bytes = download_blob_as_bytes(GCS_PATHS_FILE)
     return np.load(io.BytesIO(paths_bytes), allow_pickle=True).tolist()
@@ -73,3 +71,14 @@ def save_image_paths(paths):
     buffer = io.BytesIO()
     np.save(buffer, np.array(paths, dtype=object))
     upload_bytes_to_blob(GCS_PATHS_FILE, buffer.getvalue())
+
+# ---------- تحميل الفهرس وقائمة الصور عند بدء التشغيل ----------
+
+try:
+    index = load_faiss_index()
+    image_paths = load_image_paths()
+except Exception as e:
+    # في حال عدم وجود الفهرس أو المسارات، ننشئ فهرس جديد وقائمة فارغة
+    index = faiss.IndexFlatL2(1280)  # حجم embedding EfficientNet-B0 هو 1280
+    image_paths = []
+
