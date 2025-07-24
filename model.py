@@ -7,6 +7,7 @@ import tensorflow_hub as hub
 from PIL import Image
 import faiss
 from google.cloud import storage
+import tempfile
 
 # إعداد المتغيرات
 GCS_BUCKET_NAME = "image-search-bucket-abohider"
@@ -40,7 +41,10 @@ def upload_bytes_to_blob(blob_name, data):
 
 def load_faiss_index():
     index_bytes = download_blob_as_bytes(GCS_INDEX_FILE)
-    return faiss.read_index(io.BytesIO(index_bytes))
+    with tempfile.NamedTemporaryFile() as tmp:
+        tmp.write(index_bytes)
+        tmp.flush()
+        return faiss.read_index(tmp.name)
 
 def load_image_paths():
     paths_bytes = download_blob_as_bytes(GCS_PATHS_FILE)
@@ -63,9 +67,11 @@ def get_image_embedding(img_tensor):
 # ---------- حفظ محدث ----------
 
 def save_faiss_index(index):
-    buffer = io.BytesIO()
-    faiss.write_index(index, buffer)
-    upload_bytes_to_blob(GCS_INDEX_FILE, buffer.getvalue())
+    with tempfile.NamedTemporaryFile() as tmp:
+        faiss.write_index(index, tmp.name)
+        tmp.seek(0)
+        index_bytes = tmp.read()
+        upload_bytes_to_blob(GCS_INDEX_FILE, index_bytes)
 
 def save_image_paths(paths):
     buffer = io.BytesIO()
